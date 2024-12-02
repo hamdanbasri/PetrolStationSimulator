@@ -10,6 +10,7 @@ public class Scanner : MonoBehaviour
     [Header("Cashier")]
     public float totalPrice;
     public TextMeshProUGUI priceText;
+    public GameObject scanLight;
 
     [Header("Prefab")]
     public GameObject Button_Item;
@@ -17,7 +18,7 @@ public class Scanner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        scanLight.SetActive(false);
     }
 
     // Update is called once per frame
@@ -47,7 +48,16 @@ public class Scanner : MonoBehaviour
                 itemPrice.text = other.GetComponent<ObjectInfo>().sellPrice.ToString("F2");
                 totalPrice += other.GetComponent<ObjectInfo>().sellPrice;
                 priceText.text = totalPrice.ToString("F2");
+
+                StartCoroutine(Scanning());
             }
         }
+    }
+
+    IEnumerator Scanning()
+    {
+        scanLight.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        scanLight.SetActive(false);
     }
 }
