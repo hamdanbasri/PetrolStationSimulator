@@ -6,6 +6,8 @@ TagManager:
   tags:
   - CinemachineTarget
   - Object
+  - InventoryCollector
+  - Customer
   layers:
   - Default
   - TransparentFX
