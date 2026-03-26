@@ -23,5 +23,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject); // Ensure only one instance exists
         }
+
+        // Confines the cursor to the game window
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
     }
 }

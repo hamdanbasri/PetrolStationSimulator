@@ -6,6 +6,7 @@ public class InventoryCollector : MonoBehaviour
 {
     public List<GameObject> inventoryObjects = new List<GameObject>();
 
+
     private void OnTriggerEnter(Collider other) 
     {
         if(other.CompareTag("Object"))

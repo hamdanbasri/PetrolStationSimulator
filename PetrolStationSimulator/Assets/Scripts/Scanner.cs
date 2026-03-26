@@ -11,6 +11,9 @@ public class Scanner : MonoBehaviour
     public float totalPrice;
     public TextMeshProUGUI priceText;
     public GameObject scanLight;
+    public int scannedItemNumber;
+    public List<GameObject> items = new List<GameObject>();
+
 
     [Header("Prefab")]
     public GameObject Button_Item;
@@ -29,15 +32,15 @@ public class Scanner : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Object"))
+        if (other.CompareTag("Object") && scannedItemNumber < 10)
         {
-            GameObject newObject = Instantiate(Button_Item, Panel_Item);
-            RectTransform rectTransform = newObject.GetComponent<RectTransform>();
-            rectTransform.localScale = Vector3.one;
-            rectTransform.localPosition = Vector3.zero;
+            StartCoroutine(Scanning());
+            Debug.Log($"{other.gameObject.name} is scanned");
+            items[scannedItemNumber].SetActive(true);
 
-            TMP_Text itemName = newObject.transform.Find("Text_Name").GetComponent<TMP_Text>();
-            TMP_Text itemPrice = newObject.transform.Find("Text_Price").GetComponent<TMP_Text>();
+            TMP_Text itemName = items[scannedItemNumber].transform.Find("Text_Name").GetComponent<TMP_Text>();
+            TMP_Text itemPrice = items[scannedItemNumber].transform.Find("Text_Price").GetComponent<TMP_Text>();
+
             if (itemName != null)
             {
                 itemName.text = other.GetComponent<ObjectInfo>().objectName; ;
@@ -46,11 +49,10 @@ public class Scanner : MonoBehaviour
             if (itemPrice != null)
             {
                 itemPrice.text = other.GetComponent<ObjectInfo>().sellPrice.ToString("F2");
-                totalPrice += other.GetComponent<ObjectInfo>().sellPrice;
-                priceText.text = totalPrice.ToString("F2");
+                AddPrice(other.GetComponent<ObjectInfo>().sellPrice);
 
                 StartCoroutine(Scanning());
-            }
+            }            
         }
     }
 
@@ -59,5 +61,24 @@ public class Scanner : MonoBehaviour
         scanLight.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         scanLight.SetActive(false);
+    }
+
+    public void AddPrice(float amount)
+    {
+        totalPrice += amount;
+        scannedItemNumber++;
+        UpdatePrice();
+    }
+
+    public void DeductPrice(float amount)
+    {
+        totalPrice -= amount;
+        scannedItemNumber--;
+        UpdatePrice();
+    }
+
+    public void UpdatePrice()
+    {
+        priceText.text = totalPrice.ToString("F2");
     }
 }
