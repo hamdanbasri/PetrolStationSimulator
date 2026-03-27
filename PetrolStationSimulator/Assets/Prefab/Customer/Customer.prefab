@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2991200606951861791}
   - component: {fileID: 1832044480857130147}
   - component: {fileID: 1189207924203999959}
+  - component: {fileID: 8935581621256403107}
   - component: {fileID: 1299188310741810013}
   - component: {fileID: 675434710796050268}
   - component: {fileID: 6518966733753142709}
@@ -54,6 +55,7 @@ MonoBehaviour:
   currentDestination: {fileID: 0}
   distanceToDestination: 0
   distanceThreshold: 1.5
+  itemToPurchaseAmount: 0
   itemSpawnPoint: {fileID: 0}
   customerSelection: {fileID: 0}
   cashierCounter: {fileID: 0}
@@ -75,6 +77,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryCollector: {fileID: 0}
   customerInventory: []
+--- !u!114 &8935581621256403107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6465959511511931571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f17cf72df6a8aa4ca723ea3761b2412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomerCash
+  cash_TenCents: 0
+  cash_FiftyCents: 0
+  cash_One: 0
+  cash_Five: 0
+  cash_Ten: 0
+  cash_Twenty: 0
 --- !u!33 &1299188310741810013
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -100,6 +120,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -121,9 +146,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &6518966733753142709
 CapsuleCollider:

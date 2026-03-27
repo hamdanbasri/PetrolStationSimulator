@@ -6,8 +6,12 @@ public class MouseDetector : MonoBehaviour
     public RectTransform mouseCursor;
     public float rayDistance = 100f;        // Mouse rays usually need more distance
     public string targetTag = "CashRegister";
-    public LayerMask detectionLayer;       // Important: Set this to "Default" or your specific layer
-    
+    public LayerMask detectionLayer;       // Important: Set this to "Default" or your specific layer    
+
+    [Header("Cash Register Settings")]
+    public Animator cashRegisterAnimator;
+    public bool isCashRegisterOpen;
+      
     [Header("References")]
     public GameObject objectToActivate;
 
@@ -21,18 +25,38 @@ public class MouseDetector : MonoBehaviour
         // 2. Perform the Raycast
         if (Physics.Raycast(ray, out hit, rayDistance, detectionLayer))
         {
-            // 3. Check for Box Collider and Tag
-            if (hit.collider is BoxCollider && hit.collider.CompareTag(targetTag))
+            if (hit.collider.CompareTag("OpenCashRegister"))
             {
-                if (objectToActivate != null && !objectToActivate.activeSelf)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    objectToActivate.SetActive(true);
-                    Debug.Log("Mouse is hovering over: " + hit.collider.gameObject.name);
+                    if (!isCashRegisterOpen)
+                    {
+                        cashRegisterAnimator.SetTrigger("Open");
+                        objectToActivate.SetActive(true);
+                        isCashRegisterOpen = true;
+                    }
                 }
+            }
+            // 3. Check for Box Collider and Tag
+            if (hit.collider.CompareTag(targetTag) && objectToActivate.activeSelf)
+            {
+                // if (objectToActivate != null && !objectToActivate.activeSelf)
+                // {
+                //     objectToActivate.SetActive(true);
+                //     Debug.Log("Looking at Cash Registe");
+                // }
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (isCashRegisterOpen)
+                    {
+                        cashRegisterAnimator.SetTrigger("Close");
+                        isCashRegisterOpen = false;
+                    }
+                }
+
             }
             else
             {
-                // Optional: Turn it off if hovering over something else
                 objectToActivate.SetActive(false);
             }
         }

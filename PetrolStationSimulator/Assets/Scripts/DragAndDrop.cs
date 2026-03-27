@@ -47,6 +47,7 @@ public class DragAndDrop : MonoBehaviour
         // Check if we hit an object with a collider
         if (Physics.Raycast(ray, out hit, grabDistance))
         {
+
             if (hit.collider.CompareTag("RemoveItemButton"))
             {
                 // Try to find the script on the button and trigger the function
@@ -57,7 +58,18 @@ public class DragAndDrop : MonoBehaviour
                     return; // Stop here so we don't try to "drag" the button
                 }
             }
-            // Only grab if the object has a specific tag (optional)
+
+            if (hit.collider.CompareTag("RM10"))
+            {
+                grabbedObject = hit.collider.gameObject;
+
+                // Record how far away the object is from the camera
+                zDistance = hit.distance;
+
+                // Calculate offset so the object doesn't "snap" its center to the cursor
+                offset = grabbedObject.transform.position - GetWorldPos();
+            }
+
             if (hit.collider.CompareTag("Object"))
             {
                 grabbedObject = hit.collider.gameObject;

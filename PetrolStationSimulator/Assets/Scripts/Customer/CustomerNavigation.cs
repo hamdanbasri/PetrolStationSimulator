@@ -14,6 +14,9 @@ public class CustomerNavigation : MonoBehaviour
     public int itemToPurchaseAmount;
     public Transform itemSpawnPoint;
     public CustomerSelection customerSelection;
+
+    [Header("Cash")]
+    public GameObject RM10;
     
     [Header("Variables")]
     public Transform cashierCounter;
@@ -32,6 +35,7 @@ public class CustomerNavigation : MonoBehaviour
         itemSpawnPoint = GameObject.Find("ItemSpawnPoint").transform;
         selectItemToPurchaseDuration = GameManager.Instance.itemSelectionDuration;
         cashierCounter = GameObject.Find("CashierLine_1").transform;
+        // RM10 = GameObject.Find("CashOnTable_RM10.00");
         //agent.stoppingDistance = distanceThreshold;
 
         //Populating the destinations
@@ -115,6 +119,7 @@ public class CustomerNavigation : MonoBehaviour
                 Instantiate(customerSelection.customerInventory[i], itemSpawnPoint.position, Quaternion.identity);
                 Debug.Log("Instantiated");
             }
+            RM10.SetActive(true);
 
         }
         else

@@ -4,12 +4,15 @@ using Unity.VisualScripting;
 using TMPro;
 using UnityEngine;
 using JetBrains.Annotations;
+using UnityEditor.ShaderGraph.Internal;
 
 public class Scanner : MonoBehaviour
 {
     [Header("Cashier")]
     public float totalPrice;
     public TextMeshProUGUI priceText;
+    public float amountPaidPrice;
+    public TextMeshProUGUI amountPaidText;
     public GameObject scanLight;
     public int scannedItemNumber;
     public List<GameObject> items = new List<GameObject>();
@@ -80,5 +83,11 @@ public class Scanner : MonoBehaviour
     public void UpdatePrice()
     {
         priceText.text = totalPrice.ToString("F2");
+    }
+
+    public void CalculateAmountPaid(float amount)
+    {
+        amountPaidPrice += amount;
+        amountPaidText.text = $"Amount Paid: {amountPaidPrice.ToString("F2")}";
     }
 }

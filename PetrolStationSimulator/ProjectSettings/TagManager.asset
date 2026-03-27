@@ -10,6 +10,12 @@ TagManager:
   - Customer
   - CashRegister
   - RemoveItemButton
+  - RM1
+  - RM5
+  - RM10
+  - RM20
+  - RM50
+  - OpenCashRegister
   layers:
   - Default
   - TransparentFX
