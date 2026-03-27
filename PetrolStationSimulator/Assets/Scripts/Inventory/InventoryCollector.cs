@@ -9,7 +9,7 @@ public class InventoryCollector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) 
     {
-        if(other.CompareTag("Object"))
+        if(other.CompareTag("Object") || other.CompareTag("Snacks"))
         {
             // Add the GameObject to the list
             if (!inventoryObjects.Contains(other.gameObject))
@@ -21,7 +21,7 @@ public class InventoryCollector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
 {
-    if (other.CompareTag("Object"))
+    if (other.CompareTag("Object") || other.CompareTag("Snacks"))
     {
         inventoryObjects.Remove(other.gameObject);
     }

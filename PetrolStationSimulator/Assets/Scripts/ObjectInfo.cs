@@ -7,4 +7,5 @@ public class ObjectInfo : MonoBehaviour
     public string objectName;
     public float basePrice;
     public float sellPrice;
+    public bool itemIsScanned;
 }

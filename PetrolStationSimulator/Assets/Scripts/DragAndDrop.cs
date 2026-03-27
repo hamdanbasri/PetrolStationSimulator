@@ -7,6 +7,7 @@ public class DragAndDrop : MonoBehaviour
     // Drag your Circle UI object here in the Inspector
     public RectTransform virtualCursor;
     public float grabDistance = 100f;
+    public LayerMask detectionLayer; 
 
     private GameObject grabbedObject;
     private float zDistance;
@@ -45,7 +46,7 @@ public class DragAndDrop : MonoBehaviour
         RaycastHit hit;
 
         // Check if we hit an object with a collider
-        if (Physics.Raycast(ray, out hit, grabDistance))
+        if (Physics.Raycast(ray, out hit, grabDistance, detectionLayer))
         {
 
             if (hit.collider.CompareTag("RemoveItemButton"))

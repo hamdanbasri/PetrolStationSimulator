@@ -548,7 +548,7 @@ GameObject:
   - component: {fileID: 6790676884045135938}
   - component: {fileID: 6402482667807632776}
   - component: {fileID: 7365792112837070787}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Button_Cancel
   m_TagString: RemoveItemButton
   m_Icon: {fileID: 0}

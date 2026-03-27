@@ -13,6 +13,8 @@ public class Scanner : MonoBehaviour
     public TextMeshProUGUI priceText;
     public float amountPaidPrice;
     public TextMeshProUGUI amountPaidText;
+    public float balanceAmount;
+    public TextMeshProUGUI balanceAmountText;
     public GameObject scanLight;
     public int scannedItemNumber;
     public List<GameObject> items = new List<GameObject>();
@@ -35,7 +37,7 @@ public class Scanner : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Object") && scannedItemNumber < 10)
+        if (other.CompareTag("Object") || other.CompareTag("Snacks") && scannedItemNumber < 10 && !other.GetComponent<ObjectInfo>().itemIsScanned)
         {
             StartCoroutine(Scanning());
             Debug.Log($"{other.gameObject.name} is scanned");
@@ -46,14 +48,15 @@ public class Scanner : MonoBehaviour
 
             if (itemName != null)
             {
-                itemName.text = other.GetComponent<ObjectInfo>().objectName; ;
+                itemName.text = other.GetComponent<ObjectInfo>().objectName;
+                
             }
 
             if (itemPrice != null)
             {
                 itemPrice.text = other.GetComponent<ObjectInfo>().sellPrice.ToString("F2");
                 AddPrice(other.GetComponent<ObjectInfo>().sellPrice);
-
+                other.GetComponent<ObjectInfo>().itemIsScanned = true;
                 StartCoroutine(Scanning());
             }            
         }
@@ -89,5 +92,12 @@ public class Scanner : MonoBehaviour
     {
         amountPaidPrice += amount;
         amountPaidText.text = $"Amount Paid: {amountPaidPrice.ToString("F2")}";
+        CalculateBalanceToReturn(amountPaidPrice);
+    }
+
+    public void CalculateBalanceToReturn(float amount)
+    {
+        balanceAmount = amountPaidPrice - totalPrice;
+        balanceAmountText.text = $"Balance: {balanceAmount.ToString("F2")}";
     }
 }

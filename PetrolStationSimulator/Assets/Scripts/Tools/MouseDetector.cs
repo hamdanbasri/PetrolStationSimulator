@@ -6,7 +6,11 @@ public class MouseDetector : MonoBehaviour
     public RectTransform mouseCursor;
     public float rayDistance = 100f;        // Mouse rays usually need more distance
     public string targetTag = "CashRegister";
-    public LayerMask detectionLayer;       // Important: Set this to "Default" or your specific layer    
+    public LayerMask detectionLayer;       // Important: Set this to "Default" or your specific layer 
+
+    [Header("Placeholder")]
+    public GameObject Placeholder_Cash;
+    public GameObject Placeholder_Snacks;   
 
     [Header("Cash Register Settings")]
     public Animator cashRegisterAnimator;
@@ -25,6 +29,7 @@ public class MouseDetector : MonoBehaviour
         // 2. Perform the Raycast
         if (Physics.Raycast(ray, out hit, rayDistance, detectionLayer))
         {
+            
             if (hit.collider.CompareTag("OpenCashRegister"))
             {
                 if (Input.GetMouseButtonDown(0))
@@ -37,9 +42,28 @@ public class MouseDetector : MonoBehaviour
                     }
                 }
             }
+
+            if (hit.collider.CompareTag("Snacks"))
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    hit.collider.gameObject.SetActive(false);
+                    Placeholder_Snacks.SetActive(true);
+                }
+            }
+
+            if (hit.collider.CompareTag("RM10"))
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    hit.collider.gameObject.SetActive(false);
+                    Placeholder_Cash.SetActive(true);
+                }
+            }
             // 3. Check for Box Collider and Tag
             if (hit.collider.CompareTag(targetTag) && objectToActivate.activeSelf)
             {
+                Debug.Log("Found the cash register");
                 // if (objectToActivate != null && !objectToActivate.activeSelf)
                 // {
                 //     objectToActivate.SetActive(true);
@@ -50,15 +74,16 @@ public class MouseDetector : MonoBehaviour
                     if (isCashRegisterOpen)
                     {
                         cashRegisterAnimator.SetTrigger("Close");
+                        objectToActivate.SetActive(false);
                         isCashRegisterOpen = false;
                     }
                 }
 
             }
-            else
-            {
-                objectToActivate.SetActive(false);
-            }
+            // else
+            // {
+            //     objectToActivate.SetActive(false);
+            // }
         }
     }
 }
