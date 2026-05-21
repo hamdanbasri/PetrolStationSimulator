@@ -32,7 +32,7 @@ public class CustomerNavigation : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         customerSelection = GetComponent<CustomerSelection>();
-        itemSpawnPoint = GameObject.Find("ItemSpawnPoint").transform;
+        //itemSpawnPoint = GameObject.Find("ItemSpawnPoint").transform;
         selectItemToPurchaseDuration = GameManager.Instance.itemSelectionDuration;
         cashierCounter = GameObject.Find("CashierLine_1").transform;
         // RM10 = GameObject.Find("CashOnTable_RM10.00");
@@ -104,7 +104,7 @@ public class CustomerNavigation : MonoBehaviour
         isWaitingInLine = true;
 
         yield return new WaitForSeconds(2);
-        CheckCashRegisterAvailability();
+        //CheckCashRegisterAvailability();
 
         isWaitingInLine = false;
     }
