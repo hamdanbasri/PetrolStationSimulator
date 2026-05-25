@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems; // Required for UI checking
 
 public class CameraManager : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class CameraManager : MonoBehaviour
 
     // State Variables
     private bool isDragging;
+    private bool canOrbit; // Tracks if the orbit started on a valid game-world area
     private Vector2 dragStartMousePos;
 
     // Target values for smooth lerping
@@ -86,9 +88,12 @@ public class CameraManager : MonoBehaviour
 
     void Update()
     {
-        HandleZoom();
-        HandleOrbit();
-        HandleLeftClickMove();
+        // Check if the pointer is over a UI element this frame
+        bool isOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+
+        HandleZoom(isOverUI);
+        HandleOrbit(isOverUI);
+        HandleLeftClickMove(isOverUI);
     }
 
     void LateUpdate()
@@ -102,11 +107,14 @@ public class CameraManager : MonoBehaviour
         ApplyTransformations();
     }
 
-    private void HandleLeftClickMove()
+    private void HandleLeftClickMove(bool isOverUI)
     {
         // Instantly target a new lookAt position on Left-Click, provided we aren't placing an object
         if (Input.GetMouseButtonDown(0))
         {
+            // Ignore click if over UI
+            if (isOverUI) return; 
+
             if (gridSystem != null && !gridSystem.isPlacing)
             {
                 SetNewLookAtPoint();
@@ -114,16 +122,25 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    private void HandleOrbit()
+    private void HandleOrbit(bool isOverUI)
     {
-        // Orbiting uses Middle Mouse Button (2) and is allowed even during placement
+        // Orbiting uses Middle Mouse Button (2)
         if (Input.GetMouseButtonDown(2))
         {
-            isDragging = false;
-            dragStartMousePos = Input.mousePosition;
+            // If we start the click on UI, prevent orbiting for the duration of this click
+            if (isOverUI)
+            {
+                canOrbit = false;
+            }
+            else
+            {
+                canOrbit = true;
+                isDragging = false;
+                dragStartMousePos = Input.mousePosition;
+            }
         }
 
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(2) && canOrbit)
         {
             // Check threshold before initiating drag
             if (!isDragging && Vector2.Distance(dragStartMousePos, Input.mousePosition) > dragThresholdPixels)
@@ -145,15 +162,24 @@ public class CameraManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(2))
         {
+            // Reset orbit validation
+            canOrbit = false;
+
             // Release the cursor back to the user
-            isDragging = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (isDragging)
+            {
+                isDragging = false;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
     }
 
-    private void HandleZoom()
+    private void HandleZoom(bool isOverUI)
     {
+        // Prevent zooming if hovering over UI (allows safe scrolling in UI menus)
+        if (isOverUI) return;
+
         float scrollDelta = Input.mouseScrollDelta.y;
         if (Mathf.Abs(scrollDelta) > 0.01f)
         {

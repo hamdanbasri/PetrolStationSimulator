@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems; // Required for UI checking
 
 public class GridSystem : MonoBehaviour
 {
     [Header("Placement State")]
     public bool isPlacing;
     public float gridSize = 1f;
+    public event Action OnPlacementCanceled;
 
     [Header("References")]
     [Tooltip("The single prefab used for both the ghost and the final placed object.")]
@@ -43,6 +46,7 @@ public class GridSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             isPlacing = false;
+            OnPlacementCanceled?.Invoke();
         }
 
         // 2. Manage Ghost Lifecycle
@@ -59,20 +63,46 @@ public class GridSystem : MonoBehaviour
         // If not placing, do nothing else
         if (!isPlacing) return;
 
-        // 3. Core Logic
+        // 3. Handle Rotation 
+        // Called here so it works even if the mouse is over the UI (as requested)
         HandleRotation();
+
+        // 4. UI Check: Prevent placement and hide ghost if hovering over UI menus
+        bool isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+
+        if (isPointerOverUI)
+        {
+            // Hide the ghost while over UI
+            if (ghostInstance != null && ghostInstance.activeSelf)
+            {
+                ghostInstance.SetActive(false);
+            }
+            
+            // Abort the rest of the update (prevents snapping, validating, and placing)
+            return; 
+        }
+        else
+        {
+            // Reveal the ghost once the mouse is back over the game world
+            if (ghostInstance != null && !ghostInstance.activeSelf)
+            {
+                ghostInstance.SetActive(true);
+            }
+        }
+
+        // 5. Core Logic (Only runs if NOT over UI)
         HandleHoverAndSnap();
         CheckPlacementValidity();
         UpdateGhostVisuals();
 
-        // 4. Place Object (Continuous)
+        // 6. Place Object (Continuous)
         if (Input.GetMouseButtonDown(0) && canPlace)
         {
             PlaceObject();
         }
     }
 
-    private void CreateGhost()
+    public void CreateGhost()
     {
         // Instantiate the prefab to act as our ghost
         ghostInstance = Instantiate(itemPrefab);
@@ -94,7 +124,7 @@ public class GridSystem : MonoBehaviour
         ghostRenderers = ghostInstance.GetComponentsInChildren<Renderer>();
     }
 
-    private void DestroyGhost()
+    public void DestroyGhost()
     {
         if (ghostInstance != null)
         {
