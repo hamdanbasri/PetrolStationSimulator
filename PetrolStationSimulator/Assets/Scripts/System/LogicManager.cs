@@ -6,7 +6,7 @@ public class LogicManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        uiManager = FindFirstObjectByType<UIManager>();
+        //uiManager = FindFirstObjectByType<UIManager>();
     }
 
     // Update is called once per frame
