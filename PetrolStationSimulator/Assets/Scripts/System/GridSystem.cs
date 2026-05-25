@@ -227,8 +227,11 @@ public class GridSystem : MonoBehaviour
             child.gameObject.layer = layerIndex;
         }
 
-        // Note: Because isPlacing stays true, the ghost remains visible.
-        // It will immediately turn red on the next frame because it is now colliding
-        // with the object we just placed, which is the correct feedback!
+        // --- NEW CODE: Remember the prefab for the Edit System ---
+        PlacedObjectData data = newObj.AddComponent<PlacedObjectData>();
+        data.originalPrefab = itemPrefab;
+        // --------------------------------------------------------
+
+        // Note: Because isPlacing stays true, the ghost remains visible...
     }
 }

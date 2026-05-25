@@ -3,19 +3,29 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    // Singleton instance so dynamic prefabs can call UpdateObjectToPlace() easily
+    public static UIManager Instance;
+
     public GameObject mainUI;
     public GridSystem gridSystem;
+    
+    [Header("Master Placement Controls")]
     public Button placeObjectButton;
     public GameObject placementEnabledText;
 
-    [Header("Object Selection")]
-    public GameObject displayShelf;
-    public GameObject atm;
-    public GameObject iceCreamFridge;
-    public Button placeDisplayShelfButton;
-    public Button placeATMButton;
-    public Button placeIceCreamFridgeButton;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        // Standard Singleton Setup
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
         mainUI.SetActive(false);
@@ -29,53 +39,22 @@ public class UIManager : MonoBehaviour
 
         if (placeObjectButton != null)
         {
-            // Add the listener to the onClick event
             placeObjectButton.onClick.AddListener(EnablePlacement);
+            
+            // QoL Addition: Disable the place button until the player actually selects an item from the menu
+            placeObjectButton.interactable = false;
         }
         else
         {
-            Debug.LogWarning("Button reference is missing!");
+            Debug.LogWarning("Place Object Button reference is missing!");
         }
-
-        if (placeDisplayShelfButton != null)
-        {
-            // Use lambda () => to pass the parameter correctly
-            placeDisplayShelfButton.onClick.AddListener(() => UpdateObjectToPlace(displayShelf));
-        }
-        else
-        {
-            Debug.LogWarning("Button reference is missing!");
-        }
-
-        if (placeATMButton != null)
-        {
-            // Use lambda () => to pass the parameter correctly
-            placeATMButton.onClick.AddListener(() => UpdateObjectToPlace(atm));
-        }
-        else
-        {
-            Debug.LogWarning("Button reference is missing!");
-        }
-
-        if (placeIceCreamFridgeButton != null)
-        {
-            // Use lambda () => to pass the parameter correctly
-            placeIceCreamFridgeButton.onClick.AddListener(() => UpdateObjectToPlace(iceCreamFridge));
-        }
-        else
-        {
-            Debug.LogWarning("Button reference is missing!");
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void EnablePlacement()
     {
+        // Failsafe: Don't allow placement if no prefab is selected
+        if (gridSystem.itemPrefab == null) return;
+
         gridSystem.isPlacing = true;
         placementEnabledText.SetActive(true);
         placeObjectButton.interactable = false;
@@ -84,14 +63,26 @@ public class UIManager : MonoBehaviour
     private void DisablePlacement()
     {        
         placementEnabledText.SetActive(false);
-        placeObjectButton.interactable = true; 
+        
+        // Re-enable the place button so they can try placing the selected item again if they canceled
+        if (placeObjectButton != null)
+        {
+            placeObjectButton.interactable = true; 
+        }
     }
 
+    // This is now called dynamically by the PlacementObjectInfo buttons!
     public void UpdateObjectToPlace(GameObject updatePlaceObjected)
     {
         gridSystem.itemPrefab = updatePlaceObjected;
         gridSystem.DestroyGhost();
         gridSystem.CreateGhost();
+
+        // Now that an object is selected, enable the master Place button
+        if (placeObjectButton != null)
+        {
+            placeObjectButton.interactable = true;
+        }
     }
 
     void OnDestroy()
