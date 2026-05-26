@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6719672218128822698}
   - component: {fileID: 7388703333696260990}
   - component: {fileID: 8059827658104261864}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RightStop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PetrolPumpManager
   isOccupied: 0
-  fuelRemaining: 0
   fuelPrice: 0
   car: {fileID: 0}
   tickInterval: 1
@@ -173,7 +172,7 @@ GameObject:
   - component: {fileID: 2724321927901668988}
   - component: {fileID: 82060737463911302}
   - component: {fileID: 4144582232074800397}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LeftStop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +207,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PetrolPumpManager
   isOccupied: 0
-  fuelRemaining: 0
   fuelPrice: 0
   car: {fileID: 0}
   tickInterval: 1
