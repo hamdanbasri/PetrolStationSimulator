@@ -4,6 +4,8 @@ using UnityEngine.EventSystems; // Required for UI checking
 
 public class GridSystem : MonoBehaviour
 {
+    public static GridSystem Instance;
+
     [Header("Placement State")]
     public bool isPlacing;
     public float gridSize = 1f;
@@ -12,6 +14,8 @@ public class GridSystem : MonoBehaviour
     [Header("References")]
     [Tooltip("The single prefab used for both the ghost and the final placed object.")]
     public GameObject itemPrefab;
+    public float itemPrice;
+    public CashManager cashManager;
 
     [Header("Visual Feedback")]
     public Material validMaterial;
@@ -33,6 +37,18 @@ public class GridSystem : MonoBehaviour
     private GameObject ghostInstance;
     private BoxCollider ghostCollider;
     private Renderer[] ghostRenderers;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -216,22 +232,29 @@ public class GridSystem : MonoBehaviour
 
     private void PlaceObject()
     {
-        // Instantiate the REAL permanent object
-        GameObject newObj = Instantiate(itemPrefab, ghostInstance.transform.position, ghostInstance.transform.rotation);
-
-        // Assign the newly placed object to the PlacedObjects layer
-        int layerIndex = Mathf.RoundToInt(Mathf.Log(placedObjectsLayer.value, 2));
-        Transform[] allChildren = newObj.GetComponentsInChildren<Transform>(true);
-        foreach (Transform child in allChildren)
+        if (cashManager != null)
         {
-            child.gameObject.layer = layerIndex;
+            if (cashManager.cashAmount > 0)
+            {
+                // Instantiate the REAL permanent object
+                GameObject newObj = Instantiate(itemPrefab, ghostInstance.transform.position, ghostInstance.transform.rotation);
+
+                // Assign the newly placed object to the PlacedObjects layer
+                int layerIndex = Mathf.RoundToInt(Mathf.Log(placedObjectsLayer.value, 2));
+                Transform[] allChildren = newObj.GetComponentsInChildren<Transform>(true);
+                foreach (Transform child in allChildren)
+                {
+                    child.gameObject.layer = layerIndex;
+                }
+
+                // --- NEW CODE: Remember the prefab for the Edit System ---
+                PlacedObjectData data = newObj.GetComponent<PlacedObjectData>();
+                data.originalPrefab = itemPrefab;
+                data.objectPrice = itemPrice;
+
+                cashManager.cashAmount -= itemPrefab.GetComponent<PlacedObjectData>().objectPrice;
+                cashManager.UpdateCashAmount();
+            }
         }
-
-        // --- NEW CODE: Remember the prefab for the Edit System ---
-        PlacedObjectData data = newObj.AddComponent<PlacedObjectData>();
-        data.originalPrefab = itemPrefab;
-        // --------------------------------------------------------
-
-        // Note: Because isPlacing stays true, the ghost remains visible...
     }
 }

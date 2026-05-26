@@ -28,6 +28,7 @@ public class PlacementObjectInfo : MonoBehaviour
         priceText.text = "$" + itemData.itemPrice.ToString("F2"); 
         iconImage.sprite = itemData.itemIcon;
         objectPrefab = itemData.objectPrefab;
+        //GridSystem.Instance.itemPrice = itemData.itemPrice;
 
         // Clear any old listeners (good practice if you ever reuse/pool UI elements)
         myButton.onClick.RemoveAllListeners();
