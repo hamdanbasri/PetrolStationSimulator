@@ -18,6 +18,8 @@ TagManager:
   - OpenCashRegister
   - CashRegisterCashCollider
   - Snacks
+  - Car
+  - PetrolPump
   layers:
   - Default
   - TransparentFX

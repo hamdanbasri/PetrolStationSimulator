@@ -1,20 +1,49 @@
 using UnityEngine;
+using TMPro;
 
 public class LogicManager : MonoBehaviour
 {
+    public static LogicManager Instance;
     public UIManager uiManager;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public float fuelPrice;
+    public int pumpIslandAmount;
+    public float fuelRemaining;
+    public TextMeshProUGUI fuelRemainingText;
+
+    void Awake()
     {
-        //uiManager = FindFirstObjectByType<UIManager>();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Update is called once per frame
+    void Start()
+    {        
+        CalculateFuelCapacity();
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             uiManager.mainUI.SetActive(true);
         }
+    }
+
+    public void CalculateFuelCapacity()
+    {
+        pumpIslandAmount = GameObject.FindObjectsByType<PetrolPumpManager>(FindObjectsSortMode.None).Length;
+        fuelRemaining = pumpIslandAmount * 7500 / 2;
+        fuelRemainingText.text = fuelRemaining.ToString() + "l";
+    }
+
+    public void UpdateFuelRemaining()
+    {
+        fuelRemainingText.text = fuelRemaining.ToString() + "l";
     }
 }
