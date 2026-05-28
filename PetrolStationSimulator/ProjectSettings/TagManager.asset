@@ -4,20 +4,6 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - CinemachineTarget
-  - Object
-  - InventoryCollector
-  - Customer
-  - CashRegister
-  - RemoveItemButton
-  - RM1
-  - RM5
-  - RM10
-  - RM20
-  - RM50
-  - OpenCashRegister
-  - CashRegisterCashCollider
-  - Snacks
   - Car
   - PetrolPump
   layers:
