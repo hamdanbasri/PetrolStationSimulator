@@ -13,9 +13,9 @@ public class PlacementObjectInfo : MonoBehaviour
     [HideInInspector] // We don't need to see this in the inspector anymore, it's handled by code
     public GameObject objectPrefab;
     
-    private Button myButton;
+    public Button myButton;
 
-    private void Awake()
+    private void Start()
     {
         // Grab the button component from this UI prefab
         myButton = GetComponent<Button>();

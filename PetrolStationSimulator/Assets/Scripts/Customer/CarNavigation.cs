@@ -4,53 +4,90 @@ using UnityEngine.AI;
 public class CarNavigation : MonoBehaviour
 {
     [Header("Destinations")]
-    public Transform[] destination;
     public Transform currentDestination;
-    public Transform exitDestination;
     public float distanceToDestination;
-    public float distanceThreshold;
+    public float distanceThreshold = 1.5f;
 
     [Header("Variables")]
     public float currentFuel;
-    public float fuelTankSize;
+    public float fuelTankSize = 50f;
     public bool agentHasDestination;
+    
+    // We keep track of the pump we are assigned to, so we know if we need to interact with it
+    private PetrolPumpManager assignedPump;
 
     [Header("Private")]
     private NavMeshAgent agent;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        SetDestination();
+        currentFuel = Random.Range(5f, 20f);
+        RequestPumpAssignment();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (agentHasDestination)
+        if (agentHasDestination && currentDestination != null)
         {
             distanceToDestination = Vector3.Distance(agent.transform.position, currentDestination.position);
 
-            if (distanceToDestination > distanceThreshold)
-            {
-                agent.destination = currentDestination.position;
-            }
-            else
+            if (distanceToDestination <= distanceThreshold)
             {
                 agentHasDestination = false;
+                
+                // Optional: Snap the car perfectly into position when it arrives
+                transform.position = currentDestination.position;
+                transform.rotation = currentDestination.rotation;
             }
         }
 
-        if(currentFuel >= fuelTankSize)
+        // Simulating the fuel fill-up (You'll likely change this later based on your fuel logic)
+        // When full, leave the pump and head to the exit.
+        if (currentFuel >= fuelTankSize && assignedPump != null)
         {
-            agent.destination = exitDestination.position;
+            LeaveStation();
         }
     }
 
-    public void SetDestination()
+    public void RequestPumpAssignment()
     {
-        int randomDestination = Random.Range(0,destination.Length);
-        currentDestination = destination[randomDestination];
+        // Ask the centralized manager for the best pump
+        assignedPump = StationManager.Instance.GetShortestQueuePump();
+
+        if (assignedPump != null)
+        {
+            // Ask the pump for a specific spot (either the pump itself, or a spot in line)
+            Transform assignedSpot = assignedPump.AssignQueueSpot(this);
+
+            if (assignedSpot != null)
+            {
+                UpdateDestination(assignedSpot);
+            }
+            else
+            {
+                // Edge case handled below
+                LeaveStation();
+            }
+        }
+    }
+
+    // Called by this script, OR by the PetrolPumpManager when the line moves forward
+    public void UpdateDestination(Transform newDestination)
+    {
+        currentDestination = newDestination;
+        agent.destination = currentDestination.position;
         agentHasDestination = true;
+    }
+
+    public void LeaveStation()
+    {
+        assignedPump = null; // Detach from the pump
+        UpdateDestination(StationManager.Instance.stationExit);
+    }
+
+    public void ReceiveFuel(float amount)
+    {
+        currentFuel += amount;
     }
 }
