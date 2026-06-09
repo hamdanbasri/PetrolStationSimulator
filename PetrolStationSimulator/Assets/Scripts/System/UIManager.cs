@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -7,7 +8,10 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     public GameObject mainUI;
+    public GameObject dashboardUI;
     public GridSystem gridSystem;
+
+    public TextMeshProUGUI dashboardTitle;
     
     [Header("Master Placement Controls")]
     public Button placeObjectButton;
@@ -83,6 +87,11 @@ public class UIManager : MonoBehaviour
         {
             placeObjectButton.interactable = true;
         }
+    }
+
+    public void UpdateDashboardTitle(string title)
+    {
+        dashboardTitle.text = title;
     }
 
     void OnDestroy()

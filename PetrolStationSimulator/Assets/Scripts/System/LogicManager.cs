@@ -29,9 +29,14 @@ public class LogicManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             uiManager.mainUI.SetActive(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            uiManager.dashboardUI.SetActive(true);
         }
     }
 
