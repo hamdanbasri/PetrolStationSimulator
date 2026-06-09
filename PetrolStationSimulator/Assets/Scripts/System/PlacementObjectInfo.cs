@@ -8,7 +8,7 @@ public class PlacementObjectInfo : MonoBehaviour
     [Header("UI Components")]
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI priceText;
-    public Image iconImage;
+    public RawImage iconImage;
     
     [HideInInspector] // We don't need to see this in the inspector anymore, it's handled by code
     public GameObject objectPrefab;
@@ -26,7 +26,7 @@ public class PlacementObjectInfo : MonoBehaviour
     {
         nameText.text = itemData.itemName;
         priceText.text = "$" + itemData.itemPrice.ToString("F2"); 
-        iconImage.sprite = itemData.itemIcon;
+        iconImage.texture = itemData.itemImage;
         objectPrefab = itemData.objectPrefab;
         //GridSystem.Instance.itemPrice = itemData.itemPrice;
 

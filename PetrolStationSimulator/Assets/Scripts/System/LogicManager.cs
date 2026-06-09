@@ -38,6 +38,12 @@ public class LogicManager : MonoBehaviour
         {
             uiManager.dashboardUI.SetActive(true);
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {            
+            uiManager.mainUI.SetActive(false);
+            uiManager.dashboardUI.SetActive(false);
+        }
     }
 
     public void CalculateFuelCapacity()

@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // 1. We still need a struct to define what an item is.
 [System.Serializable]
 public struct UpgradeItem
 {
     public string itemName;
-    public Sprite itemIcon; // Remember: Sprite is the data, Image is the UI component!
+    // public Sprite itemIcon; // Remember: Sprite is the data, Image is the UI component!
+    public Texture itemImage;
     public float itemPrice;
     public GameObject objectPrefab;
 }
