@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class UIManager : MonoBehaviour
 
     public GameObject mainUI;
     public GameObject dashboardUI;
+    public GameObject[] dashboardPanels;
+    public GameObject[] managementTabPanels;
     public GridSystem gridSystem;
 
     public TextMeshProUGUI dashboardTitle;
@@ -16,6 +19,13 @@ public class UIManager : MonoBehaviour
     [Header("Master Placement Controls")]
     public Button placeObjectButton;
     public GameObject placementEnabledText;
+
+    void OnEnable()
+    {     
+        UpdateDashboardPanels(0);
+        UpdateManagementTabPanels(0);
+        Debug.Log("Dashboard is Open");
+    }
 
     void Awake()
     {
@@ -92,6 +102,22 @@ public class UIManager : MonoBehaviour
     public void UpdateDashboardTitle(string title)
     {
         dashboardTitle.text = title;
+    }
+
+    public void UpdateDashboardPanels(int activeIndex)
+    {
+        for (int j = 0; j < dashboardPanels.Length; j++)
+        {
+            dashboardPanels[j].SetActive(j == activeIndex);
+        }
+    }
+
+    public void UpdateManagementTabPanels(int activeIndex)
+    {
+        for (int j = 0; j < managementTabPanels.Length; j++)
+        {
+            managementTabPanels[j].SetActive(j == activeIndex);
+        }
     }
 
     void OnDestroy()
