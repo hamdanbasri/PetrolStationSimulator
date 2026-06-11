@@ -13,6 +13,7 @@ public class TimeManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI dayText;
+    [SerializeField] private TextMeshProUGUI dashboardDayText;
 
     [Header("Lighting Reference")]
     [SerializeField] private Light sunLight; // Assign your Directional Light here
@@ -85,9 +86,10 @@ public class TimeManager : MonoBehaviour
         }
 
         // Format Day
-        if (dayText != null)
+        if (dayText != null && dashboardDayText != null)
         {
             dayText.text = "Day " + currentDay;
+            dashboardDayText.text = currentDay.ToString();
         }
 
         // Update Sun/Night logic

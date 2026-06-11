@@ -5,7 +5,6 @@ public class PetrolPumpManager : MonoBehaviour
 {
     public bool isOccupied;
     public bool isReserved;
-    public float fuelRemaining;
     public float fuelPrice;
 
     [Header("Pump Settings")]

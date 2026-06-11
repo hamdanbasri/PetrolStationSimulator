@@ -7,7 +7,8 @@ public class StationManager : MonoBehaviour
 
     [Header("Station Setup")]
     // Drag and drop all your Petrol Pumps into this list in the Inspector
-    public List<PetrolPumpManager> allPumps = new List<PetrolPumpManager>();
+    public List<PetrolPumpManager> allPumps = new List<PetrolPumpManager>();    
+    public float fuelRemaining;
     
     // Where cars should go if the entire station is 100% full
     public Transform stationExit; 
@@ -17,6 +18,8 @@ public class StationManager : MonoBehaviour
         // Simple Singleton setup
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+        
+        allPumps.AddRange(FindObjectsByType<PetrolPumpManager>(FindObjectsSortMode.None));
     }
 
     // Cars will call this method when they spawn

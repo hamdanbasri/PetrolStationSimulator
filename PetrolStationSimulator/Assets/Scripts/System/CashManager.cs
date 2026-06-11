@@ -6,6 +6,7 @@ public class CashManager : MonoBehaviour
     public static CashManager Instance;
     public float cashAmount;
     public TextMeshProUGUI cashAmountText;
+    public TextMeshProUGUI dashboardCashAmountText;
 
     void Awake()
     {
@@ -34,5 +35,6 @@ public class CashManager : MonoBehaviour
     public void UpdateCashAmount()
     {
         cashAmountText.text = cashAmount.ToString("F2");
+        dashboardCashAmountText.text = cashAmount.ToString("F2");
     }
 }
