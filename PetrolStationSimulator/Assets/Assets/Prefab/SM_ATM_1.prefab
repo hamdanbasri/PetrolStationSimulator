@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3132ef31f5803fc4597150f559a1df36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlacedObjectData
+  itemTypeID: ATM
   originalPrefab: {fileID: 0}
   objectPrice: 200
 --- !u!65 &6263491347493507070

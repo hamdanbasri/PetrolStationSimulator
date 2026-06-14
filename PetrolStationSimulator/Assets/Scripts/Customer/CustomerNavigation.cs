@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,6 +22,17 @@ public class CustomerNavigation : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        // 1. Find all GameObjects with the target tag
+        GameObject[] shelfObjects = GameObject.FindGameObjectsWithTag("DisplayShelf");
+
+        // 2. Initialize the array with the exact matching size
+        destination = new Transform[shelfObjects.Length];
+
+        // 3. Populate the array with each object's transform
+        for (int i = 0; i < shelfObjects.Length; i++)
+        {
+            destination[i] = shelfObjects[i].transform;
+        }
         SetDestination();
     }
 
@@ -41,7 +53,7 @@ public class CustomerNavigation : MonoBehaviour
             }
         }
 
-        if(currentFuel >= fuelTankSize)
+        if (currentFuel >= fuelTankSize)
         {
             agent.destination = exitDestination.position;
         }
@@ -49,7 +61,7 @@ public class CustomerNavigation : MonoBehaviour
 
     public void SetDestination()
     {
-        int randomDestination = Random.Range(0,destination.Length);
+        int randomDestination = Random.Range(0, destination.Length);
         currentDestination = destination[randomDestination];
         agentHasDestination = true;
     }

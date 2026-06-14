@@ -17,7 +17,7 @@ public class EditManager : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
-        editUIPanel.SetActive(false); // Ensure UI is hidden at start
+        //editUIPanel.SetActive(false); // Ensure UI is hidden at start
     }
 
     void Update()

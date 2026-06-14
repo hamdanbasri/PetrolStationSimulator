@@ -41,8 +41,7 @@ public class LogicManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {            
-            uiManager.mainUI.SetActive(false);
-            uiManager.dashboardUI.SetActive(false);
+            HideDashboards();
         }
     }
 
@@ -56,5 +55,11 @@ public class LogicManager : MonoBehaviour
     public void UpdateFuelRemaining()
     {
         fuelRemainingText.text = fuelRemaining.ToString() + "l";
+    }
+
+    public void HideDashboards()
+    {
+        uiManager.mainUI.SetActive(false);
+        uiManager.dashboardUI.SetActive(false);
     }
 }

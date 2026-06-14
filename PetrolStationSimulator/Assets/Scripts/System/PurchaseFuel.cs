@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
-using Cinemachine;
 
 public class PurchaseFuel : MonoBehaviour
 {
@@ -21,20 +19,29 @@ public class PurchaseFuel : MonoBehaviour
     public TextMeshProUGUI ninetySevenPurchasePriceText;
     public TextMeshProUGUI ninetyFivePurchasePriceText;
     public TextMeshProUGUI euroPurchasePriceText;
+    public float totalPrice;
 
     [Header("Total Fuel Purchase Price Text")]
     public TextMeshProUGUI totalFuelPurchasePrice;
+
+    [Header("Reference")]
+    public GameObject managementPanel;
+    public Button purchaseFuelButton;
     void Start()
     {
-        ninetySevenDisplayPriceText.text = ninetySevenPurchasePrice.ToString("F2");
-        ninetyFiveDisplayPriceText.text = ninetyFivePurchasePrice.ToString("F2");
-        euroDisplayPriceText.text = euroPurchasePrice.ToString("F2");
+        ninetySevenDisplayPriceText.text = ninetySevenPurchasePrice.ToString("N2");
+        ninetyFiveDisplayPriceText.text = ninetyFivePurchasePrice.ToString("N2");
+        euroDisplayPriceText.text = euroPurchasePrice.ToString("N2");
 
+        UpdateTotalFuelPurchasePrice();
     }
 
     void Update()
     {
-        
+        if (managementPanel.activeInHierarchy)
+        {
+            purchaseFuelButton.interactable = CashManager.Instance.cashAmount > totalPrice;
+        }
     }
 
     public void IncreaseFuelPurchase(Image fuelBarImage)
@@ -59,7 +66,7 @@ public class PurchaseFuel : MonoBehaviour
     {
         if (fuelBarImage != null && fuelBarImage.fillAmount != 0)
         {
-            ninetySevenPurchasePriceText.text = "$" + (ninetySevenPurchasePrice * (fuelBarImage.fillAmount * priceMultiplier)).ToString("F2");
+            ninetySevenPurchasePriceText.text = "$" + (ninetySevenPurchasePrice * (fuelBarImage.fillAmount * priceMultiplier)).ToString("N2");
         }
         else
         {
@@ -71,7 +78,7 @@ public class PurchaseFuel : MonoBehaviour
     {
         if (fuelBarImage != null && fuelBarImage.fillAmount != 0)
         {
-            ninetyFivePurchasePriceText.text = "$" + (ninetyFivePurchasePrice * (fuelBarImage.fillAmount * priceMultiplier)).ToString("F2");
+            ninetyFivePurchasePriceText.text = "$" + (ninetyFivePurchasePrice * (fuelBarImage.fillAmount * priceMultiplier)).ToString("N2");
         }
         else
         {
@@ -83,7 +90,7 @@ public class PurchaseFuel : MonoBehaviour
     {
         if (fuelBarImage != null && fuelBarImage.fillAmount != 0)
         {
-            euroPurchasePriceText.text = "$" + (euroPurchasePrice * (fuelBarImage.fillAmount * priceMultiplier)).ToString("F2");
+            euroPurchasePriceText.text = "$" + (euroPurchasePrice * (fuelBarImage.fillAmount * priceMultiplier)).ToString("N2");
         }
         else
         {
@@ -104,10 +111,19 @@ public class PurchaseFuel : MonoBehaviour
         float.TryParse(cleanEuro, out float euroPrice);
 
         // Calculate total
-        float totalPrice = nineSevenPrice + nineFivePrice + euroPrice;
+        totalPrice = nineSevenPrice + nineFivePrice + euroPrice;
 
         // Display total with the dollar sign back in front of it
-        totalFuelPurchasePrice.text = "$" + totalPrice.ToString("F2");
+        totalFuelPurchasePrice.text = "$" + totalPrice.ToString("N2");
+    }
+
+    public void PurchaseFuelAtPrice()
+    {
+        if(CashManager.Instance.cashAmount > totalPrice)
+        {
+            CashManager.Instance.cashAmount -= totalPrice;
+            CashManager.Instance.UpdateCashAmount();
+        }
     }
 
 }
