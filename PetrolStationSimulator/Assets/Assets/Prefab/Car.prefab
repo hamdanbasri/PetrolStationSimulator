@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 8002619799625444679}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 50, y: 0, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -55,6 +55,8 @@ MonoBehaviour:
   currentFuel: 0
   fuelTankSize: 60
   agentHasDestination: 0
+  isExit: 0
+  spawner: {fileID: 0}
 --- !u!33 &3503672241137183891
 MeshFilter:
   m_ObjectHideFlags: 0

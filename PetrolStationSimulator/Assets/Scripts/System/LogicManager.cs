@@ -32,6 +32,7 @@ public class LogicManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             uiManager.mainUI.SetActive(true);
+            uiManager.gridObject.SetActive(true);
         }
 
         if (Input.GetKeyDown(KeyCode.I))
@@ -60,6 +61,7 @@ public class LogicManager : MonoBehaviour
     public void HideDashboards()
     {
         uiManager.mainUI.SetActive(false);
-        uiManager.dashboardUI.SetActive(false);
+        uiManager.dashboardUI.SetActive(false);        
+        uiManager.gridObject.SetActive(false);
     }
 }

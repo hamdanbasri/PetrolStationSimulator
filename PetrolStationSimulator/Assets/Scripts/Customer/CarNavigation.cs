@@ -12,18 +12,28 @@ public class CarNavigation : MonoBehaviour
     public float currentFuel;
     public float fuelTankSize = 50f;
     public bool agentHasDestination;
+    public bool isExit;
     
     // We keep track of the pump we are assigned to, so we know if we need to interact with it
     private PetrolPumpManager assignedPump;
 
+    [Header("Managers")]
+    public CarSpawner spawner;
+
     [Header("Private")]
     private NavMeshAgent agent;
 
-    void Start()
+    void Awake()
     {
+        spawner = FindAnyObjectByType<CarSpawner>();        
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    void OnEnable()
+    {
         currentFuel = Random.Range(5f, 20f);
         RequestPumpAssignment();
+        transform.position = spawner.selectedSpawnPoint.position;
     }
 
     void Update()
@@ -47,6 +57,16 @@ public class CarNavigation : MonoBehaviour
         if (currentFuel >= fuelTankSize && assignedPump != null)
         {
             LeaveStation();
+        }
+
+        if(isExit)
+        {
+            if (Vector3.Distance(transform.position, StationManager.Instance.stationExit.position) <= distanceThreshold)
+            {
+                // We reached the exit!
+                if (spawner != null) spawner.DespawnCustomer(this.gameObject);
+                else Destroy(gameObject);
+            }
         }
     }
 
@@ -83,7 +103,7 @@ public class CarNavigation : MonoBehaviour
     public void LeaveStation()
     {
         assignedPump = null; // Detach from the pump
-        UpdateDestination(StationManager.Instance.stationExit);
+        //UpdateDestination(StationManager.Instance.stationExit);
     }
 
     public void ReceiveFuel(float amount)

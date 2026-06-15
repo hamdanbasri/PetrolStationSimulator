@@ -8,6 +8,8 @@ TagManager:
   - DisplayShelf
   - PetrolPump
   - CashierPayingArea
+  - ExitDestination
+  - CashierWaitArea
   layers:
   - Default
   - TransparentFX

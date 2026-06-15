@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     public GameObject dashboardUI;
     public GameObject[] dashboardPanels;
     public GameObject[] managementTabPanels;
+    public GameObject gridObject;
     public GridSystem gridSystem;
 
     public TextMeshProUGUI dashboardTitle;
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         mainUI.SetActive(false);
+        gridObject.SetActive(false);
         gridSystem = FindFirstObjectByType<GridSystem>();
         placementEnabledText.SetActive(false);
 
