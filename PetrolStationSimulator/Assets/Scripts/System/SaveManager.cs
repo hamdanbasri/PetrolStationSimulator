@@ -45,12 +45,14 @@ public class SaveManager : MonoBehaviour
 
         // Establish safe persistent storage path target on Windows (%userprofile%/AppData/LocalLow/...)
         saveFilePath = Path.Combine(Application.persistentDataPath, "gas_station_save.json");
+        // Automatically attempt to load existing layouts when scene initializes
+        LoadGame();
     }
 
     void Start()
     {
-        // Automatically attempt to load existing layouts when scene initializes
-        LoadGame();
+        
+        
     }
 
     // Handles the requested condition to automatically save layout elements when a user exits the application

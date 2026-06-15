@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,14 +8,18 @@ public class CustomerNavigation : MonoBehaviour
     [Header("Destinations")]
     public Transform[] destination;
     public Transform currentDestination;
+    public Transform payingDestination;
     public Transform exitDestination;
     public float distanceToDestination;
     public float distanceThreshold;
 
     [Header("Variables")]
-    public float currentFuel;
-    public float fuelTankSize;
     public bool agentHasDestination;
+    public bool isPaying; 
+    public bool isExitShop;
+
+    [Header("Animator")]
+    public Animator animator;
 
     [Header("Private")]
     private NavMeshAgent agent;
@@ -22,6 +27,10 @@ public class CustomerNavigation : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+        SetIdle();
+
+        payingDestination = GameObject.FindGameObjectWithTag("CashierPayingArea").transform;
         // 1. Find all GameObjects with the target tag
         GameObject[] shelfObjects = GameObject.FindGameObjectsWithTag("DisplayShelf");
 
@@ -33,7 +42,15 @@ public class CustomerNavigation : MonoBehaviour
         {
             destination[i] = shelfObjects[i].transform;
         }
-        SetDestination();
+
+        if(shelfObjects.Length > 0)
+        {
+            SetDestination();
+        }
+        else
+        {
+            Debug.LogWarning("CUSTOMER: Unable to find Shelf to set destination");
+        }
     }
 
     // Update is called once per frame
@@ -45,17 +62,55 @@ public class CustomerNavigation : MonoBehaviour
 
             if (distanceToDestination > distanceThreshold)
             {
+                SetWalking();
                 agent.destination = currentDestination.position;
             }
             else
             {
-                agentHasDestination = false;
+                SetIdle();
+                transform.position = currentDestination.position;
+                transform.rotation = currentDestination.rotation;
+                StartCoroutine(LookThroughShelf());
+                agentHasDestination = false;                
             }
         }
 
-        if (currentFuel >= fuelTankSize)
+        if (isPaying)
         {
-            agent.destination = exitDestination.position;
+            distanceToDestination = Vector3.Distance(agent.transform.position, payingDestination.position);
+
+            if (distanceToDestination > distanceThreshold)
+            {
+                SetWalking();
+                agent.destination = payingDestination.position;
+            }
+            else
+            {
+                SetIdle();
+                transform.position = payingDestination.position;
+                transform.rotation = payingDestination.rotation;
+                StartCoroutine(PayAtCashier());
+                isPaying = false;
+            }
+        }
+            
+
+        if (isExitShop)
+        {
+            distanceToDestination = Vector3.Distance(agent.transform.position, exitDestination.position);
+
+            if (distanceToDestination > distanceThreshold)
+            {
+                SetWalking();
+                agent.destination = exitDestination.position;
+            }
+            else
+            {
+                SetIdle();
+                transform.position = exitDestination.position;
+                transform.rotation = exitDestination.rotation;
+                isExitShop = false;
+            }
         }
     }
 
@@ -64,5 +119,30 @@ public class CustomerNavigation : MonoBehaviour
         int randomDestination = Random.Range(0, destination.Length);
         currentDestination = destination[randomDestination];
         agentHasDestination = true;
+    }
+
+    IEnumerator LookThroughShelf()
+    {
+        yield return new WaitForSeconds(5);
+        isPaying = true;
+    }
+
+    IEnumerator PayAtCashier()
+    {
+        yield return new WaitForSeconds(5);
+        isExitShop = true;
+    }
+
+
+    void SetIdle()
+    {        
+        animator.SetBool("isIdle", true);
+        animator.SetBool("isWalking", false);
+    }
+
+    void SetWalking()
+    {        
+        animator.SetBool("isIdle", false);
+        animator.SetBool("isWalking", true);
     }
 }
