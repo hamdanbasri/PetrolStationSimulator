@@ -10,6 +10,7 @@ TagManager:
   - CashierPayingArea
   - ExitDestination
   - CashierWaitArea
+  - StationEntrance
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Interactable
   - PlacedObjects
   - IgnoreNav
-  - 
+  - Car
   - 
   - 
   - 

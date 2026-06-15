@@ -8,6 +8,8 @@ public class CustomerNavigation : MonoBehaviour
     public Transform currentShelfDestination;
     public Transform exitDestination;
     public float distanceThreshold = 0.5f;
+    public float exitDistanceThreshold = 0.7f;
+    public float distance;
 
     [Header("Variables")]
     public bool isShopping;
@@ -70,7 +72,8 @@ public class CustomerNavigation : MonoBehaviour
         // 1. If shopping at the shelf
         if (isShopping)
         {
-            if (Vector3.Distance(transform.position, currentShelfDestination.position) <= distanceThreshold)
+            distance = Vector3.Distance(transform.position, currentShelfDestination.position);
+            if (distance <= distanceThreshold)
             {
                 isShopping = false;
                 SetIdle();
@@ -82,7 +85,8 @@ public class CustomerNavigation : MonoBehaviour
         // 2. If walking to their spot in the queue
         if (isWalkingToQueue)
         {
-            if (Vector3.Distance(transform.position, myCurrentQueuePoint.position) <= distanceThreshold)
+            distance = Vector3.Distance(transform.position, myCurrentQueuePoint.position);
+            if (distance <= distanceThreshold)
             {
                 isWalkingToQueue = false;
                 SetIdle();
@@ -99,7 +103,8 @@ public class CustomerNavigation : MonoBehaviour
         // 3. If leaving the shop
         if (isExitShop)
         {
-            if (Vector3.Distance(transform.position, exitDestination.position) <= distanceThreshold)
+            distance = Vector3.Distance(transform.position, exitDestination.position);
+            if (distance < exitDistanceThreshold)
             {
                 // We reached the exit!
                 if (spawner != null) spawner.DespawnCustomer(this.gameObject);
